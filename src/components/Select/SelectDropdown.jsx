@@ -10,7 +10,7 @@ const SelectDropdown = (props) => (
             value={props.selectedOption}
             onChange={props.handlerFunction}
         >
-            <option value=''>{props.value}</option>
+            <option value={props.value}>{props.value}</option>
             {props.options.map(opt => {
                 return (
                     <option
