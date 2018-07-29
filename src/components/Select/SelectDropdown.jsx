@@ -2,20 +2,20 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const SelectDropdown = (props) => (
-    < div className="form-group" >
-        <label className="form-label">{props.title}</label>
+    < div className="form-group row" >
+        <label className="form-label col-sm-4 col-md-4 col-lg-4">{props.title}</label>
         <select
-            className="form-select"
-            name={props.name}
-            value={props.selectedOption}
+            className="form-select form-control col-sm-8 col-md-8 col-lg-8"
+            name={"opportunity[" + props.name + "[]]"}
+            value={props.value}
             onChange={props.handlerFunction}
+            data-setname={props.name}
         >
-            <option value={props.value}>{props.value}</option>
             {props.options.map(opt => {
                 return (
                     <option
                         key={opt.id}
-                        value={opt.name}>{opt.name}</option>
+                        value={opt.id}>{opt.name}</option>
                 );
             }
             )}
