@@ -5,6 +5,7 @@ import TextArea from '../components/TextArea/TextArea';
 import ListOptions from '../components/Listoptions/listoptions';
 
 const accessToken = 'dd0df21c8af5d929dff19f74506c4a8153d7acd34306b9761fd4a57cfa1d483c';
+//const PLACES_API_KEY = 'AIzaSyC3gHNsEtD6fjsOq0IYDejKMBX5YZx9t9U';
 class ReactFormContainer extends Component {
     constructor(props) {
         super(props);
@@ -21,6 +22,7 @@ class ReactFormContainer extends Component {
             selection_process: '',
             salary: '',
             city: '',
+            placesCity: '',
             editMode: false,
             selectedBackground: '',
             selectedSkill: '',
@@ -30,6 +32,8 @@ class ReactFormContainer extends Component {
         this.handleChange = this.handleChange.bind(this);
         this.handleBackgroundChange = this.handleBackgroundChange.bind(this);
         this.handleSkillChange = this.handleSkillChange.bind(this);
+        this.handleFormSubmit = this.handleFormSubmit.bind(this);
+        this.handleLocationChange = this.handleLocationChange.bind(this);
     }
 
     handleChange(e) {
@@ -38,25 +42,54 @@ class ReactFormContainer extends Component {
         });
     }
 
-    handleBackgroundChange(e) {
+    handleLocationChange(e) {
+        let autocomplete;
+        autocomplete = new window.google.maps.places.Autocomplete(document.getElementById('city'), {
+            types: ['(regions)']
+        });
+
+        window.google.maps.event.addListener(autocomplete, 'place_changed', function () {
+            let place = autocomplete.getPlace();
+        });
+
         this.setState({
+            city: e.target.value,
+        });
+    }
+
+    handleBackgroundChange(e) {
+        const backgroundObj = this.state.backgroundLists.filter(function (item) {
+            return item.id.toString() === e.target.value
+        });
+        this.setState({
+            backgrounds: backgroundObj,
             selectedBackground: e.target.value,
         });
     }
 
     handleSkillChange(e) {
+        const skillObj = this.state.skillsLists.filter(function (item) {
+            return item.id.toString() === e.target.value
+        });
         this.setState({
+            skills: skillObj,
             selectedSkill: e.target.value,
         });
+
     }
 
     handleFormSubmit(e) {
         e.preventDefault();
         const data = new FormData(e.target);
+        data.append("opportunity[backgrounds[]][id]", this.state.backgrounds[0].id);
+        data.append("opportunity[backgrounds[]][option]", this.state.backgrounds[0].option ? this.state.backgrounds[0].option : 'preferred');
+        data.append("opportunity[skills[]][id]", this.state.skills[0].id);
+        data.append("opportunity[skills[]][option]", this.state.skills[0].option ? this.state.skills[0].option : 'preferred');
+        data.append("opportunity[skills[]][level]", this.state.skills[0].level ? this.state.skills[0].level : 0);
         fetch('http://gisapi-web-staging-1636833739.eu-west-1.elb.amazonaws.com/v2/opportunities/6124?access_token=' + accessToken, {
             method: 'PATCH',
             body: data
-        })
+        });
     }
 
     toggleEditMode() {
@@ -119,10 +152,10 @@ class ReactFormContainer extends Component {
                     <SingleInput inputType="text" title="Title" handlerFunction={this.handleChange} value={this.state.title} name="title" editMode={this.state.editMode} />
                     <SingleInput inputType="number" title="Salary" handlerFunction={this.handleChange} value={this.state.salary} name="salary" editMode={this.state.editMode} />
                     <SingleInput inputType="text" title="Selection Process" handlerFunction={this.handleChange} value={this.state.selection_process} name="selection_process" editMode={this.state.editMode} />
-                    <SingleInput inputType="text" title="City" handlerFunction={this.handleChange} value={this.state.city} name="city" editMode={this.state.editMode} />
-                    {this.state.editMode && this.state.backgroundLists ? <SelectDropdown title="Backgrounds" name="backgrounds" handlerFunction={this.handleBackgroundChange} value={this.state.selectedBackground} options={this.state.backgroundLists && this.state.backgroundLists} /> : <ListOptions title="Backgrounds" name="backgroundLists" options={this.state.backgrounds && this.state.backgrounds} />}
+                    <SingleInput id="city" inputType="text" title="City" handlerFunction={this.handleLocationChange} value={this.state.city} name="city" editMode={this.state.editMode} />
+                    {this.state.editMode && this.state.backgroundLists ? <SelectDropdown title="Backgrounds" handlerFunction={this.handleBackgroundChange} value={this.state.selectedBackground} options={this.state.backgroundLists && this.state.backgroundLists} /> : <ListOptions title="Backgrounds" name="backgroundLists" options={this.state.backgrounds && this.state.backgrounds} />}
                     <TextArea title="Description" rows={5} resize={false} handlerFunction={this.handleChange} value={this.state.description} editMode={this.state.editMode} name="description" />
-                    {this.state.editMode && this.state.skillsLists ? <SelectDropdown title="Skills" name="skills" handlerFunction={this.handleSkillChange} value={this.state.selectedSkill} options={this.state.skillsLists && this.state.skillsLists} /> : <ListOptions title="Skills" name="skillsLists" options={this.state.skills && this.state.skills} />}
+                    {this.state.editMode && this.state.skillsLists ? <SelectDropdown title="Skills" handlerFunction={this.handleSkillChange} value={this.state.selectedSkill} options={this.state.skillsLists && this.state.skillsLists} /> : <ListOptions title="Skills" name="skillsLists" options={this.state.skills && this.state.skills} />}
 
                     <div className="row">
                         <span className="col-sm-4 col-md-4 col-lg-4"></span>
