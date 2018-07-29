@@ -6,7 +6,6 @@ const SelectDropdown = (props) => (
         <label className="form-label col-sm-4 col-md-4 col-lg-4">{props.title}</label>
         <select
             className="form-select form-control col-sm-8 col-md-8 col-lg-8"
-            name={"opportunity[" + props.name + "[]]"}
             value={props.value}
             onChange={props.handlerFunction}
             data-setname={props.name}
@@ -24,7 +23,6 @@ const SelectDropdown = (props) => (
 );
 
 SelectDropdown.propTypes = {
-    name: PropTypes.string.isRequired,
     options: PropTypes.array.isRequired,
     selectedOption: PropTypes.string,
     handlerFunction: PropTypes.func.isRequired,
