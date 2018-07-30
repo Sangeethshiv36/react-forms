@@ -87,7 +87,7 @@ class ReactFormContainer extends Component {
         data.append("opportunity[skills[]][id]", this.state.skills[0].id);
         data.append("opportunity[skills[]][option]", this.state.skills[0].option ? this.state.skills[0].option : 'preferred');
         data.append("opportunity[skills[]][level]", this.state.skills[0].level ? this.state.skills[0].level : 0);
-        fetch('http://gisapi-web-staging-1636833739.eu-west-1.elb.amazonaws.com/v2/opportunities/6124?access_token=' + accessToken, {
+        fetch('https://gisapi-web-staging-1636833739.eu-west-1.elb.amazonaws.com/v2/opportunities/6124?access_token=' + accessToken, {
             method: 'PATCH',
             body: data
         });
@@ -100,7 +100,7 @@ class ReactFormContainer extends Component {
     }
 
     componentDidMount() {
-        fetch('http://gisapi-web-staging-1636833739.eu-west-1.elb.amazonaws.com/v2/opportunities/6124?access_token=' + accessToken)
+        fetch('https://gisapi-web-staging-1636833739.eu-west-1.elb.amazonaws.com/v2/opportunities/6124?access_token=' + accessToken)
             .then(res => res.json())
             .then(data => {
                 this.setState({
@@ -121,14 +121,14 @@ class ReactFormContainer extends Component {
             
 
         if (!this.state.backgroundLists.length && !this.state.skillsLists.length) {
-            fetch('http://gisapi-web-staging-1636833739.eu-west-1.elb.amazonaws.com/v2/lists/backgrounds?access_token=' + accessToken)
+            fetch('https://gisapi-web-staging-1636833739.eu-west-1.elb.amazonaws.com/v2/lists/backgrounds?access_token=' + accessToken)
                 .then(res => res.json())
                 .then(data => {
                     this.setState({
                         backgroundLists: data,
                     })
                 });
-            fetch('http://gisapi-web-staging-1636833739.eu-west-1.elb.amazonaws.com/v2/lists/skills?access_token=' + accessToken)
+            fetch('https://gisapi-web-staging-1636833739.eu-west-1.elb.amazonaws.com/v2/lists/skills?access_token=' + accessToken)
                 .then(res => res.json())
                 .then(data => {
                     this.setState({
