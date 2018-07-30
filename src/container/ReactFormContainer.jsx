@@ -22,7 +22,6 @@ class ReactFormContainer extends Component {
             selection_process: '',
             salary: '',
             city: '',
-            placesCity: '',
             editMode: false,
             selectedBackground: '',
             selectedSkill: '',
@@ -34,8 +33,6 @@ class ReactFormContainer extends Component {
         this.handleSkillChange = this.handleSkillChange.bind(this);
         this.handleFormSubmit = this.handleFormSubmit.bind(this);
         this.handleLocationChange = this.handleLocationChange.bind(this);
-        this.setRef = this.setRef.bind(this);
-        this.updatePlaces =this.updatePlaces.bind(this);
     }
 
     handleChange(e) {
