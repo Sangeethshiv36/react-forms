@@ -3,9 +3,9 @@ import SingleInput from '../components/SingleInput/SingleInput'
 import SelectDropdown from '../components/Select/SelectDropdown';
 import TextArea from '../components/TextArea/TextArea';
 import ListOptions from '../components/Listoptions/listoptions';
+import PlacesSearch from '../components/PlacesSearch/placesSearch';
 
 const accessToken = 'dd0df21c8af5d929dff19f74506c4a8153d7acd34306b9761fd4a57cfa1d483c';
-//const PLACES_API_KEY = 'AIzaSyC3gHNsEtD6fjsOq0IYDejKMBX5YZx9t9U';
 class ReactFormContainer extends Component {
     constructor(props) {
         super(props);
@@ -34,6 +34,8 @@ class ReactFormContainer extends Component {
         this.handleSkillChange = this.handleSkillChange.bind(this);
         this.handleFormSubmit = this.handleFormSubmit.bind(this);
         this.handleLocationChange = this.handleLocationChange.bind(this);
+        this.setRef = this.setRef.bind(this);
+        this.updatePlaces =this.updatePlaces.bind(this);
     }
 
     handleChange(e) {
@@ -43,17 +45,19 @@ class ReactFormContainer extends Component {
     }
 
     handleLocationChange(e) {
-        let autocomplete;
+        let autocomplete,place;
         autocomplete = new window.google.maps.places.Autocomplete(document.getElementById('city'), {
             types: ['(regions)']
         });
 
-        window.google.maps.event.addListener(autocomplete, 'place_changed', function () {
-            let place = autocomplete.getPlace();
+        window.google.maps.event.addListener(autocomplete, 'place_changed',  () => {
+             place = autocomplete.getPlace();
+             this.setState({
+                 city:place.formatted_address
+             });
         });
-
         this.setState({
-            city: e.target.value,
+            city: this.inputElement.value,
         });
     }
 
@@ -117,6 +121,7 @@ class ReactFormContainer extends Component {
                     selectedSkill: data.skills[0].id,
                 });
             });
+            
 
         if (!this.state.backgroundLists.length && !this.state.skillsLists.length) {
             fetch('http://gisapi-web-staging-1636833739.eu-west-1.elb.amazonaws.com/v2/lists/backgrounds?access_token=' + accessToken)
@@ -146,13 +151,11 @@ class ReactFormContainer extends Component {
                 <form className="aiesec-form" onSubmit={this.handleFormSubmit}>
                     <br />
                     <h3 className="text-center">AISEC Organization Form</h3>
-
-
                     <br />
                     <SingleInput inputType="text" title="Title" handlerFunction={this.handleChange} value={this.state.title} name="title" editMode={this.state.editMode} />
                     <SingleInput inputType="number" title="Salary" handlerFunction={this.handleChange} value={this.state.salary} name="salary" editMode={this.state.editMode} />
                     <SingleInput inputType="text" title="Selection Process" handlerFunction={this.handleChange} value={this.state.selection_process} name="selection_process" editMode={this.state.editMode} />
-                    <SingleInput id="city" inputType="text" title="City" handlerFunction={this.handleLocationChange} value={this.state.city} name="city" editMode={this.state.editMode} />
+                    {this.state.editMode ? <PlacesSearch name="citySearch" inputType="text" id="city" value={this.state.city} handlerFunction={this.handleLocationChange} title="City"/>: <SingleInput inputType="text" title="City"  value={this.state.city} name="city" editMode={this.state.editMode} /> }
                     {this.state.editMode && this.state.backgroundLists ? <SelectDropdown title="Backgrounds" handlerFunction={this.handleBackgroundChange} value={this.state.selectedBackground} options={this.state.backgroundLists && this.state.backgroundLists} /> : <ListOptions title="Backgrounds" name="backgroundLists" options={this.state.backgrounds && this.state.backgrounds} />}
                     <TextArea title="Description" rows={5} resize={false} handlerFunction={this.handleChange} value={this.state.description} editMode={this.state.editMode} name="description" />
                     {this.state.editMode && this.state.skillsLists ? <SelectDropdown title="Skills" handlerFunction={this.handleSkillChange} value={this.state.selectedSkill} options={this.state.skillsLists && this.state.skillsLists} /> : <ListOptions title="Skills" name="skillsLists" options={this.state.skills && this.state.skills} />}
