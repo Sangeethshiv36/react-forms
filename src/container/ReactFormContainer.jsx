@@ -54,7 +54,7 @@ class ReactFormContainer extends Component {
              });
         });
         this.setState({
-            city: this.inputElement.value,
+            city: e.target.value,
         });
     }
 
@@ -152,7 +152,7 @@ class ReactFormContainer extends Component {
                     <SingleInput inputType="text" title="Title" handlerFunction={this.handleChange} value={this.state.title} name="title" editMode={this.state.editMode} />
                     <SingleInput inputType="number" title="Salary" handlerFunction={this.handleChange} value={this.state.salary} name="salary" editMode={this.state.editMode} />
                     <SingleInput inputType="text" title="Selection Process" handlerFunction={this.handleChange} value={this.state.selection_process} name="selection_process" editMode={this.state.editMode} />
-                    {this.state.editMode ? <PlacesSearch name="citySearch" inputType="text" id="city" value={this.state.city} handlerFunction={this.handleLocationChange} title="City"/>: <SingleInput inputType="text" title="City"  value={this.state.city} name="city" editMode={this.state.editMode} /> }
+                    {this.state.editMode ? <PlacesSearch name="citySearch" inputType="text" id="city" value={this.state.city} handlerFunction={this.handleLocationChange} title="City"/>: <SingleInput inputType="text" title="City" handlerFunction={this.handleLocationChange} value={this.state.city} name="city" editMode={this.state.editMode} /> }
                     {this.state.editMode && this.state.backgroundLists ? <SelectDropdown title="Backgrounds" handlerFunction={this.handleBackgroundChange} value={this.state.selectedBackground} options={this.state.backgroundLists && this.state.backgroundLists} /> : <ListOptions title="Backgrounds" name="backgroundLists" options={this.state.backgrounds && this.state.backgrounds} />}
                     <TextArea title="Description" rows={5} resize={false} handlerFunction={this.handleChange} value={this.state.description} editMode={this.state.editMode} name="description" />
                     {this.state.editMode && this.state.skillsLists ? <SelectDropdown title="Skills" handlerFunction={this.handleSkillChange} value={this.state.selectedSkill} options={this.state.skillsLists && this.state.skillsLists} /> : <ListOptions title="Skills" name="skillsLists" options={this.state.skills && this.state.skills} />}
