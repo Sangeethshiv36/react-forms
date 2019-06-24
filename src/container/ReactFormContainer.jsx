@@ -5,7 +5,7 @@ import TextArea from '../components/TextArea/TextArea';
 import ListOptions from '../components/Listoptions/listoptions';
 import PlacesSearch from '../components/PlacesSearch/placesSearch';
 
-const accessToken = 'dd0df21c8af5d929dff19f74506c4a8153d7acd34306b9761fd4a57cfa1d483c';
+const accessToken = 'Access token here'; //accesstoken
 class ReactFormContainer extends Component {
     constructor(props) {
         super(props);
